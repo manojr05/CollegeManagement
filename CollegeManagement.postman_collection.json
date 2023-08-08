@@ -1,0 +1,632 @@
+{
+	"info": {
+		"_postman_id": "61adc096-ab8d-457a-b519-30231a10651a",
+		"name": "CollegeManagement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "LoginAdmin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userName",
+							"value": "admin01",
+							"type": "default"
+						},
+						{
+							"key": "password",
+							"value": "Admin@123",
+							"type": "default"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - AddStudent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"manoj05\",\r\n    \"name\":\"Manoj R\",\r\n    \"dob\":\"02/05/2001\",\r\n    \"city\":\"Bengaluru\",\r\n    \"gender\":\"male\",\r\n    \"password\":\"Manoj@123\",\r\n    \"totalMarks\":340\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/addStudent",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"addStudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - AddTeacher",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"vishnu05\",\r\n    \"name\":\"Vishnu H\",\r\n    \"dob\":\"02/05/1981\",\r\n    \"city\":\"Bengaluru\",\r\n    \"gender\":\"male\",\r\n    \"password\":\"Vishnu@123\",\r\n    \"salary\":20000.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/addTeacher",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"addTeacher"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - addStudents",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    { \"id\":\"vishnu05\",\r\n        \"name\":\"Vishnu H\",\r\n        \"dob\":\"02/05/1999\",\r\n        \"city\":\"Bengaluru\",\r\n        \"gender\":\"male\",\r\n        \"password\":\"Vishnu@123\",\r\n        \"totalMarks\":490\r\n    },\r\n    {\r\n        \"id\":\"yogi05\",\r\n        \"name\":\"Yogish Kumar K\",\r\n        \"dob\":\"02/05/2000\",\r\n        \"city\":\"Bengaluru\",\r\n        \"gender\":\"male\",\r\n        \"password\":\"Yogi@123\",\r\n        \"totalMarks\":250\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/addStudents",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"addStudents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - AddTeachers",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\":\"mohan05\",\r\n        \"name\":\"Mohan S\",\r\n        \"dob\":\"02/05/1981\",\r\n        \"city\":\"Bengaluru\",\r\n        \"gender\":\"male\",\r\n        \"password\":\"Mohan@123\",\r\n        \"salary\":20000.00\r\n    },\r\n    {\r\n        \"id\":\"arun05\",\r\n        \"name\":\"Arun K\",\r\n        \"dob\":\"02/05/1978\",\r\n        \"city\":\"Mandya\",\r\n        \"gender\":\"male\",\r\n        \"password\":\"Arun@123\",\r\n        \"salary\":25000.00\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/addTeachers",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"addTeachers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - DeleteStudent",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "manoj05",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/admin/deleteStudent",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"deleteStudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - DeleteTeacher",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "mohan05",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/admin/deleteTeacher",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"deleteTeacher"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - ModifyStudent",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"vishnu05\",\r\n    \"name\":\"Vishnu H\",\r\n    \"dob\":\"02/05/1999\",\r\n    \"city\":\"Bengaluru\",\r\n    \"gender\":\"male\",\r\n    \"password\":\"Vishnu@123\",\r\n    \"totalMarks\":490\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/modifyStudent",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"modifyStudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - ModifyTeacher",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"mohan05\",\r\n    \"name\":\"Mohan S\",\r\n    \"dob\":\"02/05/1981\",\r\n    \"city\":\"Mandya\",\r\n    \"gender\":\"male\",\r\n    \"password\":\"Mohan@123\",\r\n    \"salary\":15000.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/modifyTeacher",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"modifyTeacher"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - FetchStudents",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "identifierType",
+							"value": "name",
+							"type": "default"
+						},
+						{
+							"key": "identifierValue",
+							"value": "Vishnu H",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/admin/fetchStudents",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"fetchStudents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - FetchTeachers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "identifierType",
+							"value": "gender",
+							"type": "default"
+						},
+						{
+							"key": "identifierValue",
+							"value": "male",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/admin/fetchTeachers",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"fetchTeachers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - FetchAllStudents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/fetchAllStudents",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"fetchAllStudents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin - FetchAllTeachers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/fetchAllTeachers",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"fetchAllTeachers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginTeacher",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userName",
+							"value": "mohan05",
+							"type": "default"
+						},
+						{
+							"key": "password",
+							"value": "Mohan@123",
+							"type": "default"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/teacher/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Teacher - AddStudent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"basava05\",\r\n    \"name\":\"Basava Prabhu B K\",\r\n    \"dob\":\"02/12/2000\",\r\n    \"city\":\"Hassan\",\r\n    \"gender\":\"male\",\r\n    \"password\":\"Basava@123\",\r\n    \"totalMarks\":150\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/teacher/addStudent",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"addStudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Teacher - addStudents",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    { \"id\":\"vishnu05\",\r\n        \"name\":\"Vishnu H\",\r\n        \"dob\":\"02/05/1999\",\r\n        \"city\":\"Bengaluru\",\r\n        \"gender\":\"male\",\r\n        \"password\":\"Vishnu@123\",\r\n        \"totalMarks\":490\r\n    },\r\n    {\r\n        \"id\":\"yogi05\",\r\n        \"name\":\"Yogish Kumar K\",\r\n        \"dob\":\"02/05/2000\",\r\n        \"city\":\"Bengaluru\",\r\n        \"gender\":\"male\",\r\n        \"password\":\"Yogi@123\",\r\n        \"totalMarks\":250\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/addStudents",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"addStudents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Teacher - FetchAllStudents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/fetchAllStudents",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"fetchAllStudents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Teacher - FetchStudents",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "identifierType",
+							"value": "name",
+							"type": "default"
+						},
+						{
+							"key": "identifierValue",
+							"value": "Vishnu H",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/teacher/fetchStudents",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"fetchStudents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginStudent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userName",
+							"value": "basava05",
+							"type": "default"
+						},
+						{
+							"key": "password",
+							"value": "Basava@123",
+							"type": "default"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/student/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Student - FetchMyDetails",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/student/getMyDetails",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"getMyDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Student - logout",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/student/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Swagger Docs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/v3/api-docs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v3",
+						"api-docs"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

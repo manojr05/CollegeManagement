@@ -1,0 +1,80 @@
+[{
+  "_id": "arun05",
+  "name": "Arun K",
+  "dob": "02/05/1978",
+  "city": "Mandya",
+  "gender": "male",
+  "password": "Arun@123",
+  "salary": 25000,
+  "userType": "teacher",
+  "_class": "com.college_management.model.User"
+},
+{
+  "_id": "basava05",
+  "name": "Basava Prabhu B K",
+  "dob": "02/12/2000",
+  "city": "Hassan",
+  "gender": "male",
+  "totalMarks": 150,
+  "grade": "C",
+  "password": "Basava@123",
+  "userType": "student",
+  "_class": "com.college_management.model.User"
+},
+{
+  "_id": "admin01",
+  "name": "Admin",
+  "dob": "02/05/2001",
+  "city": "Bengaluru",
+  "gender": "male",
+  "password": "Admin@123",
+  "salary": 50000,
+  "userType": "admin",
+  "_class": "com.college_management.model.User"
+},
+{
+  "_id": "manoj05",
+  "name": "Manoj R",
+  "dob": "02/05/2001",
+  "city": "Bengaluru",
+  "gender": "male",
+  "totalMarks": 340,
+  "grade": "C",
+  "password": "Manoj@123",
+  "userType": "student",
+  "_class": "com.college_management.model.User"
+},
+{
+  "_id": "mohan05",
+  "name": "Mohan S",
+  "dob": "02/05/1981",
+  "city": "Bengaluru",
+  "gender": "male",
+  "password": "Mohan@123",
+  "salary": 20000,
+  "userType": "teacher",
+  "_class": "com.college_management.model.User"
+},
+{
+  "_id": "yogi05",
+  "name": "Yogish Kumar K",
+  "dob": "02/05/2000",
+  "city": "Bengaluru",
+  "gender": "male",
+  "totalMarks": 250,
+  "grade": "C",
+  "password": "Yogi@123",
+  "userType": "student",
+  "_class": "com.college_management.model.User"
+},
+{
+  "_id": "vishnu05",
+  "name": "Vishnu H",
+  "dob": "02/05/1981",
+  "city": "Bengaluru",
+  "gender": "male",
+  "password": "Vishnu@123",
+  "salary": 20000,
+  "userType": "teacher",
+  "_class": "com.college_management.model.User"
+}]
