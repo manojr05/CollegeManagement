@@ -229,14 +229,19 @@ public class AdminServiceImpl implements AdminService {
 		List<StudentResponse> resultStudents = new ArrayList<>();
 		List<User> foundUsers = repository.findAll();
 
-		for (User student : foundUsers) {
-			if (student.getUserType().equals("student")) {
-				StudentResponse userToStudentConverter = CollegeUtils.userToStudentConverter(student);
-				userToStudentConverter.setMessage("Student fetched successfully");
-				resultStudents.add(userToStudentConverter);
+		if(foundUsers.size()!=0) {			
+			for (User student : foundUsers) {
+				if (student.getUserType().equals("student")) {
+					StudentResponse userToStudentConverter = CollegeUtils.userToStudentConverter(student);
+					userToStudentConverter.setMessage("Student fetched successfully");
+					resultStudents.add(userToStudentConverter);
+				}
 			}
 		}
-		return resultStudents;
+		if(resultStudents.size()!=0) {			
+			return resultStudents;
+		}
+		return null;
 	}
 
 	@Override
@@ -252,6 +257,9 @@ public class AdminServiceImpl implements AdminService {
 				resultTeachers.add(userToTeacherConverter);
 			}
 		}
-		return resultTeachers;
+		if(resultTeachers.size()!=0) {			
+			return resultTeachers;
+		}
+		return null;
 	}
 }

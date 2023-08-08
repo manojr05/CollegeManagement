@@ -121,7 +121,11 @@ public class AdminController {
     public ResponseEntity<List<StudentResponse>> fetchStudents(@RequestParam String identifierType, @RequestParam String identifierValue) {
         log.info("Received request to fetch students with identifier type: {} and value: {}", identifierType, identifierValue);
         ResponseEntity<List<StudentResponse>> response = service.fetchStudents(identifierType, identifierValue);
-        log.info("Returning response for fetching students: {}", response.getBody());
+        if(!response.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {        	
+        	log.info("Returning response for fetching students: {}", response.getBody());
+        	return response;
+        }
+        log.info("No students found");
         return response;
     }
 
@@ -129,24 +133,39 @@ public class AdminController {
     public ResponseEntity<List<TeacherResponse>> fetchTeachers(@RequestParam String identifierType, @RequestParam String identifierValue) {
         log.info("Received request to fetch teachers with identifier type: {} and value: {}", identifierType, identifierValue);
         ResponseEntity<List<TeacherResponse>> response = service.fetchTeachers(identifierType, identifierValue);
-        log.info("Returning response for fetching teachers: {}", response.getBody());
+        if(!response.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {        	
+        	log.info("Returning response for fetching teachers: {}", response.getBody());
+        	return response;
+        }
+        log.info("No teachers found");
         return response;
+        
     }
 
     @GetMapping("/fetchAllStudents")
     public ResponseEntity<List<StudentResponse>> fetchAllStudents() {
         log.info("Received request to fetch all students");
-        ResponseEntity<List<StudentResponse>> response = new ResponseEntity<>(service.fetchAllStudents(), HttpStatus.OK);
-        log.info("Returning response for fetching all students: {}", response.getBody());
-        return response;
+        List<StudentResponse> fetchAllStudents = service.fetchAllStudents();
+        if(fetchAllStudents!=null) {        	
+        	ResponseEntity<List<StudentResponse>> response = new ResponseEntity<>(fetchAllStudents, HttpStatus.OK);
+        	log.info("Returning response for fetching all students: {}", response.getBody());
+        	return response;
+        }
+        log.error("No students found");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/fetchAllTeachers")
     public ResponseEntity<List<TeacherResponse>> fetchAllTeachers() {
         log.info("Received request to fetch all teachers");
-        ResponseEntity<List<TeacherResponse>> response = new ResponseEntity<>(service.fetchAllTeachers(), HttpStatus.OK);
-        log.info("Returning response for fetching all teachers: {}", response.getBody());
-        return response;
+        List<TeacherResponse> fetchAllTeachers = service.fetchAllTeachers();
+        if(fetchAllTeachers!=null) {        	
+        	ResponseEntity<List<TeacherResponse>> response = new ResponseEntity<>(fetchAllTeachers, HttpStatus.OK);
+        	log.info("Returning response for fetching all teachers: {}", response.getBody());
+        	return response;
+        }
+        log.error("No teachers found");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 	@DeleteMapping("/deleteStudent")

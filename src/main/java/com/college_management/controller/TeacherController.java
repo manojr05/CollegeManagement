@@ -69,8 +69,13 @@ public class TeacherController {
 	@GetMapping("/fetchAllStudents")
     public ResponseEntity<List<StudentResponse>> fetchAllStudents() {
         log.info("Received request to fetch all students");
-        ResponseEntity<List<StudentResponse>> response = new ResponseEntity<>(service.fetchAllStudents(), HttpStatus.OK);
-        log.info("Returning response for fetching all students: {}", response.getBody());
-        return response;
+        List<StudentResponse> fetchAllStudents = service.fetchAllStudents();
+        if(fetchAllStudents!=null) {        	
+        	ResponseEntity<List<StudentResponse>> response = new ResponseEntity<>(fetchAllStudents, HttpStatus.OK);
+        	log.info("Returning response for fetching all students: {}", response.getBody());
+        	return response;
+        }
+        log.error("No students found");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
