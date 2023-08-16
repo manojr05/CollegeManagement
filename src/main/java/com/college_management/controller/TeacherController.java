@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.college_management.model.User;
 import com.college_management.service.TeacherService;
-import com.college_management.utils.StudentPayload;
-import com.college_management.utils.StudentResponse;
+import com.college_management.utils.UserResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,24 +27,24 @@ public class TeacherController {
 	private TeacherService service;
 
 	@PostMapping("/addStudent")
-	public ResponseEntity<StudentResponse> addStudent(@RequestBody StudentPayload user) {
-		log.info("Adding student: {}", user);
-		StudentResponse studentResponse = service.addStudent(user);
-		if (studentResponse.getStudent()!=null) {
+	public ResponseEntity<UserResponse> addStudent(@RequestBody User user) {
+		log.info("Received request to add student: {}", user);
+		UserResponse studentResponse = service.addStudent(user);
+		if (studentResponse.getUser()!=null) {
 			log.info("Student addition response: {}", studentResponse);
 			return new ResponseEntity<>(studentResponse, HttpStatus.OK);
 		}
 		log.error("Adding student failed: {}", studentResponse.getMessage());
 		return new ResponseEntity<>(studentResponse, HttpStatus.CONFLICT);
 	}
-
+	
 	@PostMapping("/addStudents")
-	public ResponseEntity<List<StudentResponse>> addStudents(@RequestBody List<StudentPayload> students) {
-		log.info("Adding students: {}", students);
+	public ResponseEntity<List<UserResponse>> addStudents(@RequestBody List<User> students) {
+		log.info("Received request to add students: {}", students);
 		boolean flag = true;
-		List<StudentResponse> addedStudents = service.addStudents(students);
-		for (StudentResponse student : addedStudents) {
-			if (student.getStudent()==null) {
+		List<UserResponse> addedStudents = service.addStudents(students);
+		for (UserResponse student : addedStudents) {
+			if (student.getUser()==null) {
 				flag = false;
 				break;
 			}
@@ -56,26 +56,30 @@ public class TeacherController {
 		log.error("Added students response with conflicts: {}", addedStudents);
 		return new ResponseEntity<>(addedStudents, HttpStatus.CONFLICT);
 	}
-
+	
 	@GetMapping("/fetchStudents")
-    public ResponseEntity<List<StudentResponse>> fetchStudents(@RequestParam String identifierType, @RequestParam String identifierValue) {
+    public ResponseEntity<List<UserResponse>> fetchStudents(@RequestParam String identifierType, @RequestParam String identifierValue) {
         log.info("Received request to fetch students with identifier type: {} and value: {}", identifierType, identifierValue);
-        ResponseEntity<List<StudentResponse>> response = service.fetchStudents(identifierType, identifierValue);
-        log.info("Returning response for fetching students: {}", response.getBody());
+        ResponseEntity<List<UserResponse>> response = service.fetchStudents(identifierType, identifierValue);
+        if(!response.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {        	
+        	log.info("Returning response for fetching students: {}", response.getBody());
+        	return response;
+        }
+        log.info("No students found");
         return response;
     }
-
-
+	
 	@GetMapping("/fetchAllStudents")
-    public ResponseEntity<List<StudentResponse>> fetchAllStudents() {
+    public ResponseEntity<List<UserResponse>> fetchAllStudents() {
         log.info("Received request to fetch all students");
-        List<StudentResponse> fetchAllStudents = service.fetchAllStudents();
+        List<UserResponse> fetchAllStudents = service.fetchAllStudents();
         if(fetchAllStudents!=null) {        	
-        	ResponseEntity<List<StudentResponse>> response = new ResponseEntity<>(fetchAllStudents, HttpStatus.OK);
+        	ResponseEntity<List<UserResponse>> response = new ResponseEntity<>(fetchAllStudents, HttpStatus.OK);
         	log.info("Returning response for fetching all students: {}", response.getBody());
         	return response;
         }
         log.error("No students found");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 }

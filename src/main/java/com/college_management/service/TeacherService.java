@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.college_management.utils.StudentPayload;
-import com.college_management.utils.StudentResponse;
+import com.college_management.model.User;
+import com.college_management.utils.UserResponse;
 
 @Service
 public interface TeacherService {
 
-	StudentResponse addStudent(StudentPayload student);
-	List<StudentResponse> addStudents(List<StudentPayload> students);
-	ResponseEntity<List<StudentResponse>> fetchStudents(String identifierType, String identifierValue);
-	List<StudentResponse> fetchAllStudents();
+	UserResponse addStudent(User student);
+	List<UserResponse> addStudents(List<User> students);
+	ResponseEntity<List<UserResponse>> fetchStudents(String identifierType, String identifierValue);
+	List<UserResponse> fetchAllStudents();
 
 }

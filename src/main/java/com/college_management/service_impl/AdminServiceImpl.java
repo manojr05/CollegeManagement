@@ -15,11 +15,7 @@ import org.springframework.stereotype.Service;
 import com.college_management.model.User;
 import com.college_management.repository.UserRepository;
 import com.college_management.service.AdminService;
-import com.college_management.utils.CollegeUtils;
-import com.college_management.utils.StudentPayload;
-import com.college_management.utils.StudentResponse;
-import com.college_management.utils.TeacherPayload;
-import com.college_management.utils.TeacherResponse;
+import com.college_management.utils.UserResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +30,7 @@ public class AdminServiceImpl implements AdminService {
 	private MongoTemplate mongoTemplate;
 
 	@Override
-	public StudentResponse addStudent(StudentPayload student) {
+	public UserResponse addStudent(User student) {
 		log.info("Adding student: {}", student);
 		if (repository.findById(student.getId()).isEmpty()) {
 
@@ -42,155 +38,151 @@ public class AdminServiceImpl implements AdminService {
 
 			int totalMarks = student.getTotalMarks();
 
-			if (totalMarks > 450) {
+			if (totalMarks >= 450) {
 				student.setGrade('A');
-			} else if (totalMarks > 350 && totalMarks < 450) {
+			} else if (totalMarks >= 350 && totalMarks <= 450) {
 				student.setGrade('B');
 			} else {
 				student.setGrade('C');
 			}
 
-			repository.save(CollegeUtils.userConverter(student));
-			return StudentResponse.builder().student(student).message("Student added successfully").build();
+			repository.save(student);
+			return UserResponse.builder().user(student).message("Student added successfully").build();
 		}
-		return StudentResponse.builder().message("User name already exists").build();
+		return UserResponse.builder().message("User name already exists").build();
 
 	}
 
 	@Override
-	public List<StudentResponse> addStudents(List<StudentPayload> students) {
+	public List<UserResponse> addStudents(List<User> students) {
 		log.info("Adding multiple students: {}", students);
-		List<StudentResponse> studentResponseList = new ArrayList<>();
+		List<UserResponse> studentResponseList = new ArrayList<>();
 
-		for (StudentPayload student : students) {
+		for (User student : students) {
 			if (repository.findById(student.getId()).isEmpty()) {
 
 				student.setUserType("student");
 
 				int totalMarks = student.getTotalMarks();
 
-				if (totalMarks > 450) {
+				if (totalMarks >= 450) {
 					student.setGrade('A');
-				} else if (totalMarks > 350 && totalMarks < 450) {
+				} else if (totalMarks >= 350 && totalMarks <= 450) {
 					student.setGrade('B');
 				} else {
 					student.setGrade('C');
 				}
 
-				repository.save(CollegeUtils.userConverter(student));
-				studentResponseList.add(StudentResponse.builder().student(student).message("Student added successfully").build());
+				repository.save(student);
+				studentResponseList.add(UserResponse.builder().user(student).message("Student added successfully").build());
 
 			} else {
-				studentResponseList.add(StudentResponse.builder().message("User name already exists").build());
+				studentResponseList.add(UserResponse.builder().message("User name already exists").build());
 			}
 		}
 		return studentResponseList;
 	}
 
 	@Override
-	public TeacherResponse addTeacher(TeacherPayload teacher) {
+	public UserResponse addTeacher(User teacher) {
 		log.info("Adding teacher: {}", teacher);
 		if (repository.findById(teacher.getId()).isEmpty()) {
 			teacher.setUserType("teacher");
-			repository.save(CollegeUtils.userConverter(teacher));
-			return TeacherResponse.builder().teacher(teacher).message("Teacher added successfully").build();
+			repository.save(teacher);
+			return UserResponse.builder().user(teacher).message("Teacher added successfully").build();
 		}
-		return TeacherResponse.builder().message("User name already exists").build();
+		return UserResponse.builder().message("User name already exists").build();
 	}
 
 	@Override
-	public List<TeacherResponse> addTeachers(List<TeacherPayload> teachers) {
+	public List<UserResponse> addTeachers(List<User> teachers) {
 		log.info("Adding multiple teachers: {}", teachers);
-		List<TeacherResponse> userResponseList = new ArrayList<>();
+		List<UserResponse> userResponseList = new ArrayList<>();
 
-		for (TeacherPayload teacher : teachers) {
+		for (User teacher : teachers) {
 			if (repository.findById(teacher.getId()).isEmpty()) {
 
 				teacher.setUserType("teacher");
-				repository.save(CollegeUtils.userConverter(teacher));
+				repository.save(teacher);
 
 				userResponseList
-						.add(TeacherResponse.builder().teacher(teacher).message("Teacher added successfully").build());
+						.add(UserResponse.builder().user(teacher).message("Teacher added successfully").build());
 			} else {
-				userResponseList.add(TeacherResponse.builder().message("User name already exists").build());
+				userResponseList.add(UserResponse.builder().message("User name already exists").build());
 			}
 		}
 		return userResponseList;
 	}
 
 	@Override
-	public StudentResponse deleteStudent(String userName) {
+	public UserResponse deleteStudent(String userName) {
 		log.info("Deleting student with UserName: {}", userName);
 		Optional<User> student = repository.findById(userName);
 		if (student.isPresent() && student.get().getUserType().equals("student")) {
 			repository.delete(student.get());
 
-			return StudentResponse.builder().student(CollegeUtils.userToStudentConverter(student.get()).getStudent()).message("Student deleted successfully").build();
+			return UserResponse.builder().user(student.get()).message("Student deleted successfully").build();
 		}
-		return StudentResponse.builder().message("No student found").build();
+		return UserResponse.builder().message("No student found").build();
 	}
 
 	@Override
-	public TeacherResponse deleteTeacher(String userName) {
+	public UserResponse deleteTeacher(String userName) {
 		log.info("Deleting teacher with UserName: {}", userName);
 		Optional<User> teacher = repository.findById(userName);
 		if (teacher.isPresent() && teacher.get().getUserType().equals("teacher")) {
 			repository.delete(teacher.get());
 
-			return TeacherResponse.builder().message("Teacher deleted successfully")
-					.teacher(CollegeUtils.userToTeacherConverter(teacher.get()).getTeacher()).build();
+			return UserResponse.builder().message("Teacher deleted successfully").user(teacher.get()).build();
 		}
-		return TeacherResponse.builder().message("No teacher found").build();
+		return UserResponse.builder().message("No teacher found").build();
 	}
 
 	@Override
-	public StudentResponse modifyStudent(StudentPayload user) {
+	public UserResponse modifyStudent(User user) {
 		log.info("Modifying student: {}", user);
 		user.setUserType("student");
 		Optional<User> student = repository.findById(user.getId());
 		if (student.isPresent() && student.get().getUserType().equals("student")) {
 			int totalMarks = user.getTotalMarks();
 
-			if (totalMarks > 450) {
+			if (totalMarks >= 450) {
 				user.setGrade('A');
-			} else if (totalMarks > 350 && totalMarks < 450) {
+			} else if (totalMarks >= 350 && totalMarks <= 450) {
 				user.setGrade('B');
 			} else {
 				user.setGrade('C');
 			}
-			repository.save(CollegeUtils.userConverter(user));
-			return StudentResponse.builder().message("Student updated successfully")
-					.student(user).build();
+			repository.save(user);
+			return UserResponse.builder().message("Student updated successfully")
+					.user(user).build();
 		}
-		return StudentResponse.builder().message("No student found").build();
+		return UserResponse.builder().message("No student found").build();
 	}
 
 	@Override
-	public TeacherResponse modifyTeacher(TeacherPayload user) {
+	public UserResponse modifyTeacher(User user) {
 		log.info("Modifying teacher: {}", user);
 		user.setUserType("teacher");
 		Optional<User> teacher = repository.findById(user.getId());
 		if (teacher.isPresent() && teacher.get().getUserType().equals("teacher")) {
-			repository.save(CollegeUtils.userConverter(user));
-			return TeacherResponse.builder().teacher(user).message("Teacher updated successfully").build();
+			repository.save(user);
+			return UserResponse.builder().user(user).message("Teacher updated successfully").build();
 		}
-		return TeacherResponse.builder().message("No teacher found").build();
+		return UserResponse.builder().message("No teacher found").build();
 	}
 
 	@Override
-	public ResponseEntity<List<StudentResponse>> fetchStudents(String identifierType, String identifierValue) {
+	public ResponseEntity<List<UserResponse>> fetchStudents(String identifierType, String identifierValue) {
 		log.info("Fetching students");
-		List<StudentResponse> resultList = new ArrayList<>();
-
+		List<UserResponse> resultList = new ArrayList<>();
 		Query query = new Query();
 		query.addCriteria(Criteria.where(identifierType).is(identifierValue));
 		List<User> foundList = mongoTemplate.find(query, User.class);
-
+		
 		for (User user : foundList) {
 			if (user.getUserType().equals("student")) {
-				StudentResponse userToStudentConverter = CollegeUtils.userToStudentConverter(user);
-				userToStudentConverter.setMessage("Student fetched successfully");
-				resultList.add(userToStudentConverter);
+				resultList.add(UserResponse.builder().user(user).message("Student fetched successfully").build());
 			}
 		}
 
@@ -201,9 +193,9 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public ResponseEntity<List<TeacherResponse>> fetchTeachers(String identifierType, String identifierValue) {
+	public ResponseEntity<List<UserResponse>> fetchTeachers(String identifierType, String identifierValue) {
 		log.info("Fetching teachers");
-		List<TeacherResponse> resultList = new ArrayList<>();
+		List<UserResponse> resultList = new ArrayList<>();
 
 		Query query = new Query();
 		query.addCriteria(Criteria.where(identifierType).is(identifierValue));
@@ -211,9 +203,7 @@ public class AdminServiceImpl implements AdminService {
 
 		for (User user : foundList) {
 			if (user.getUserType().equals("teacher")) {
-				TeacherResponse userToTeacherConverter = CollegeUtils.userToTeacherConverter(user);
-				userToTeacherConverter.setMessage("Teacher fetched successfully");
-				resultList.add(userToTeacherConverter);
+				resultList.add(UserResponse.builder().user(user).message("Teacher fetched successfully").build());
 			}
 		}
 
@@ -224,37 +214,30 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<StudentResponse> fetchAllStudents() {
+	public List<UserResponse> fetchAllStudents() {
 		log.info("Fetching all the students");
-		List<StudentResponse> resultStudents = new ArrayList<>();
-		List<User> foundUsers = repository.findAll();
+		List<UserResponse> resultStudents = new ArrayList<>();
+		List<User> foundUsers = repository.findByUserType("student");
 
 		if(foundUsers.size()!=0) {			
 			for (User student : foundUsers) {
-				if (student.getUserType().equals("student")) {
-					StudentResponse userToStudentConverter = CollegeUtils.userToStudentConverter(student);
-					userToStudentConverter.setMessage("Student fetched successfully");
-					resultStudents.add(userToStudentConverter);
-				}
+				resultStudents.add(UserResponse.builder().user(student).message("Student fetched successfully").build());
 			}
-		}
-		if(resultStudents.size()!=0) {			
+		} else if(resultStudents.size()!=0) {			
 			return resultStudents;
 		}
 		return null;
 	}
 
 	@Override
-	public List<TeacherResponse> fetchAllTeachers() {
+	public List<UserResponse> fetchAllTeachers() {
 		log.info("Fetching all the teachers");
-		List<TeacherResponse> resultTeachers = new ArrayList<>();
-		List<User> foundUsers = repository.findAll();
+		List<UserResponse> resultTeachers = new ArrayList<>();
+		List<User> foundUsers = repository.findByUserType("student");
 
-		for (User teacher : foundUsers) {
-			if (teacher.getUserType().equals("teacher")) {
-				TeacherResponse userToTeacherConverter = CollegeUtils.userToTeacherConverter(teacher);
-				userToTeacherConverter.setMessage("Teacher fetched successfully");
-				resultTeachers.add(userToTeacherConverter);
+		if(foundUsers.size()!=0) {			
+			for (User teacher : foundUsers) {
+				resultTeachers.add(UserResponse.builder().user(teacher).message("Teacher fetched successfully").build());
 			}
 		}
 		if(resultTeachers.size()!=0) {			

@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import com.college_management.model.User;
 import com.college_management.repository.UserRepository;
 import com.college_management.service.TeacherService;
-import com.college_management.utils.CollegeUtils;
-import com.college_management.utils.StudentPayload;
-import com.college_management.utils.StudentResponse;
+import com.college_management.utils.UserResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +29,7 @@ public class TeacherServiceImpl implements TeacherService {
 	private MongoTemplate mongoTemplate;
 
 	@Override
-	public StudentResponse addStudent(StudentPayload student) {
+	public UserResponse addStudent(User student) {
 		log.info("Adding student: {}", student);
 		if (repository.findById(student.getId()).isEmpty()) {
 
@@ -39,65 +37,62 @@ public class TeacherServiceImpl implements TeacherService {
 
 			int totalMarks = student.getTotalMarks();
 
-			if (totalMarks > 450) {
+			if (totalMarks >= 450) {
 				student.setGrade('A');
-			} else if (totalMarks > 350 && totalMarks < 450) {
+			} else if (totalMarks >= 350 && totalMarks <= 450) {
 				student.setGrade('B');
 			} else {
 				student.setGrade('C');
 			}
 
-			repository.save(CollegeUtils.userConverter(student));
-			return StudentResponse.builder().student(student).message("Student added successfully").build();
+			repository.save(student);
+			return UserResponse.builder().user(student).message("Student added successfully").build();
 		}
-		return StudentResponse.builder().message("User name already exists").build();
+		return UserResponse.builder().message("User name already exists").build();
 
 	}
 
 	@Override
-	public List<StudentResponse> addStudents(List<StudentPayload> students) {
+	public List<UserResponse> addStudents(List<User> students) {
 		log.info("Adding multiple students: {}", students);
-		List<StudentResponse> studentResponseList = new ArrayList<>();
+		List<UserResponse> studentResponseList = new ArrayList<>();
 
-		for (StudentPayload student : students) {
+		for (User student : students) {
 			if (repository.findById(student.getId()).isEmpty()) {
 
 				student.setUserType("student");
 
 				int totalMarks = student.getTotalMarks();
 
-				if (totalMarks > 450) {
+				if (totalMarks >= 450) {
 					student.setGrade('A');
-				} else if (totalMarks > 350 && totalMarks < 450) {
+				} else if (totalMarks >= 350 && totalMarks <= 450) {
 					student.setGrade('B');
 				} else {
 					student.setGrade('C');
 				}
 
-				repository.save(CollegeUtils.userConverter(student));
-				studentResponseList.add(StudentResponse.builder().student(student).message("Student added successfully").build());
+				repository.save(student);
+				studentResponseList.add(UserResponse.builder().user(student).message("Student added successfully").build());
 
 			} else {
-				studentResponseList.add(StudentResponse.builder().message("User name already exists").build());
+				studentResponseList.add(UserResponse.builder().message("User name already exists").build());
 			}
 		}
 		return studentResponseList;
 	}
 
 	@Override
-	public ResponseEntity<List<StudentResponse>> fetchStudents(String identifierType, String identifierValue) {
+	public ResponseEntity<List<UserResponse>> fetchStudents(String identifierType, String identifierValue) {
 		log.info("Fetching students");
-		List<StudentResponse> resultList = new ArrayList<>();
-
+		List<UserResponse> resultList = new ArrayList<>();
 		Query query = new Query();
 		query.addCriteria(Criteria.where(identifierType).is(identifierValue));
 		List<User> foundList = mongoTemplate.find(query, User.class);
-
+		
 		for (User user : foundList) {
 			if (user.getUserType().equals("student")) {
-				StudentResponse userToStudentConverter = CollegeUtils.userToStudentConverter(user);
-				userToStudentConverter.setMessage("Student fetched successfully");
-				resultList.add(userToStudentConverter);
+				resultList.add(UserResponse.builder().user(user).message("Student fetched successfully").build());
 			}
 		}
 
@@ -108,18 +103,14 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<StudentResponse> fetchAllStudents() {
+	public List<UserResponse> fetchAllStudents() {
 		log.info("Fetching all the students");
-		List<StudentResponse> resultStudents = new ArrayList<>();
-		List<User> foundUsers = repository.findAll();
+		List<UserResponse> resultStudents = new ArrayList<>();
+		List<User> foundUsers = repository.findByUserType("student");
 
 		if(foundUsers.size()!=0) {			
 			for (User student : foundUsers) {
-				if (student.getUserType().equals("student")) {
-					StudentResponse userToStudentConverter = CollegeUtils.userToStudentConverter(student);
-					userToStudentConverter.setMessage("Student fetched successfully");
-					resultStudents.add(userToStudentConverter);
-				}
+				resultStudents.add(UserResponse.builder().user(student).message("Student fetched successfully").build());
 			}
 		}
 		if(resultStudents.size()!=0) {			
@@ -127,5 +118,4 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		return null;
 	}
-
 }

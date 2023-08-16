@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.college_management.model.User;
 import com.college_management.service.AdminService;
-import com.college_management.utils.StudentPayload;
-import com.college_management.utils.StudentResponse;
-import com.college_management.utils.TeacherPayload;
-import com.college_management.utils.TeacherResponse;
+import com.college_management.utils.UserResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,36 +30,24 @@ public class AdminController {
 	private AdminService service;
 
 	@PostMapping("/addStudent")
-	public ResponseEntity<StudentResponse> addStudent(@RequestBody StudentPayload user) {
+	public ResponseEntity<UserResponse> addStudent(@RequestBody User user) {
 		log.info("Received request to add student: {}", user);
-		StudentResponse studentResponse = service.addStudent(user);
-		if (studentResponse.getStudent()!=null) {
+		UserResponse studentResponse = service.addStudent(user);
+		if (studentResponse.getUser()!=null) {
 			log.info("Student addition response: {}", studentResponse);
 			return new ResponseEntity<>(studentResponse, HttpStatus.OK);
 		}
 		log.error("Adding student failed: {}", studentResponse.getMessage());
 		return new ResponseEntity<>(studentResponse, HttpStatus.CONFLICT);
 	}
-
-	@PostMapping("/addTeacher")
-	public ResponseEntity<TeacherResponse> addTeacher(@RequestBody TeacherPayload user) {
-		log.info("Received request to add teacher: {}", user);
-		TeacherResponse teacherResponse = service.addTeacher(user);
-		if (teacherResponse.getTeacher()!=null) {
-			log.info("Teacher addition response: {}", teacherResponse);
-			return new ResponseEntity<>(teacherResponse, HttpStatus.OK);
-		}
-		log.error("Adding teacher failed: {}", teacherResponse.getMessage());
-		return new ResponseEntity<>(teacherResponse, HttpStatus.CONFLICT);
-	}
-
+	
 	@PostMapping("/addStudents")
-	public ResponseEntity<List<StudentResponse>> addStudents(@RequestBody List<StudentPayload> students) {
+	public ResponseEntity<List<UserResponse>> addStudents(@RequestBody List<User> students) {
 		log.info("Received request to add students: {}", students);
 		boolean flag = true;
-		List<StudentResponse> addedStudents = service.addStudents(students);
-		for (StudentResponse student : addedStudents) {
-			if (student.getStudent()==null) {
+		List<UserResponse> addedStudents = service.addStudents(students);
+		for (UserResponse student : addedStudents) {
+			if (student.getUser()==null) {
 				flag = false;
 				break;
 			}
@@ -74,12 +60,51 @@ public class AdminController {
 		return new ResponseEntity<>(addedStudents, HttpStatus.CONFLICT);
 	}
 
+	@GetMapping("/fetchStudents")
+    public ResponseEntity<List<UserResponse>> fetchStudents(@RequestParam String identifierType, @RequestParam String identifierValue) {
+        log.info("Received request to fetch students with identifier type: {} and value: {}", identifierType, identifierValue);
+        ResponseEntity<List<UserResponse>> response = service.fetchStudents(identifierType, identifierValue);
+        if(!response.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {        	
+        	log.info("Returning response for fetching students: {}", response.getBody());
+        	return response;
+        }
+        log.info("No students found");
+        return response;
+    }
+
+	@GetMapping("/fetchAllStudents")
+    public ResponseEntity<List<UserResponse>> fetchAllStudents() {
+        log.info("Received request to fetch all students");
+        List<UserResponse> fetchAllStudents = service.fetchAllStudents();
+        if(fetchAllStudents!=null) {        	
+        	ResponseEntity<List<UserResponse>> response = new ResponseEntity<>(fetchAllStudents, HttpStatus.OK);
+        	log.info("Returning response for fetching all students: {}", response.getBody());
+        	return response;
+        }
+        log.error("No students found");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+	@PostMapping("/addTeacher")
+	public ResponseEntity<UserResponse> addTeacher(@RequestBody User user) {
+		log.info("Received request to add teacher: {}", user);
+		UserResponse teacherResponse = service.addTeacher(user);
+		if (teacherResponse.getUser()!=null) {
+			log.info("Teacher addition response: {}", teacherResponse);
+			return new ResponseEntity<>(teacherResponse, HttpStatus.OK);
+		}
+		log.error("Adding teacher failed: {}", teacherResponse.getMessage());
+		return new ResponseEntity<>(teacherResponse, HttpStatus.CONFLICT);
+	}
+
+
 	@PostMapping("/addTeachers")
-	public ResponseEntity<List<TeacherResponse>> addTeachers(@RequestBody List<TeacherPayload> teachers) {
+	public ResponseEntity<List<UserResponse>> addTeachers(@RequestBody List<User> teachers) {
 		log.info("Received request to add teachers: {}", teachers);
 		boolean flag = true;
-		List<TeacherResponse> addedTeachers = service.addTeachers(teachers);
-		for (TeacherResponse teacher : addedTeachers) {
+		List<UserResponse> addedTeachers = service.addTeachers(teachers);
+		for (UserResponse teacher : addedTeachers) {
 			if (teacher.getMessage().contains("already")) {
 				flag = false;
 				break;
@@ -94,10 +119,10 @@ public class AdminController {
 	}
 
 	@PutMapping("/modifyStudent")
-	public ResponseEntity<StudentResponse> modifyStudent(@RequestBody StudentPayload student) {
+	public ResponseEntity<UserResponse> modifyStudent(@RequestBody User student) {
 		log.info("Received request to modify student. Student ID: {}", student.getId());
-		StudentResponse userResponse = service.modifyStudent(student);
-		if (userResponse.getStudent()!=null) {
+		UserResponse userResponse = service.modifyStudent(student);
+		if (userResponse.getUser()!=null) {
 			log.info("Student modification successful. Student ID: {}", student.getId());
 			return new ResponseEntity<>(userResponse, HttpStatus.OK);
 		}
@@ -106,10 +131,10 @@ public class AdminController {
 	}
 
 	@PutMapping("/modifyTeacher")
-	public ResponseEntity<TeacherResponse> modifyTeacher(@RequestBody TeacherPayload teacher) {
+	public ResponseEntity<UserResponse> modifyTeacher(@RequestBody User teacher) {
 		log.info("Received request to modify teacher. Teacher ID: {}", teacher.getId());
-		TeacherResponse userResponse = service.modifyTeacher(teacher);
-		if (userResponse.getTeacher()!=null) {
+		UserResponse userResponse = service.modifyTeacher(teacher);
+		if (userResponse.getUser()!=null) {
 			log.info("Teacher modification successful. Teacher ID: {}", teacher.getId());
 			return new ResponseEntity<>(userResponse, HttpStatus.OK);
 		}
@@ -117,22 +142,12 @@ public class AdminController {
 		return new ResponseEntity<>(userResponse, HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping("/fetchStudents")
-    public ResponseEntity<List<StudentResponse>> fetchStudents(@RequestParam String identifierType, @RequestParam String identifierValue) {
-        log.info("Received request to fetch students with identifier type: {} and value: {}", identifierType, identifierValue);
-        ResponseEntity<List<StudentResponse>> response = service.fetchStudents(identifierType, identifierValue);
-        if(!response.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {        	
-        	log.info("Returning response for fetching students: {}", response.getBody());
-        	return response;
-        }
-        log.info("No students found");
-        return response;
-    }
+	
 
     @GetMapping("/fetchTeachers")
-    public ResponseEntity<List<TeacherResponse>> fetchTeachers(@RequestParam String identifierType, @RequestParam String identifierValue) {
+    public ResponseEntity<List<UserResponse>> fetchTeachers(@RequestParam String identifierType, @RequestParam String identifierValue) {
         log.info("Received request to fetch teachers with identifier type: {} and value: {}", identifierType, identifierValue);
-        ResponseEntity<List<TeacherResponse>> response = service.fetchTeachers(identifierType, identifierValue);
+        ResponseEntity<List<UserResponse>> response = service.fetchTeachers(identifierType, identifierValue);
         if(!response.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {        	
         	log.info("Returning response for fetching teachers: {}", response.getBody());
         	return response;
@@ -142,25 +157,13 @@ public class AdminController {
         
     }
 
-    @GetMapping("/fetchAllStudents")
-    public ResponseEntity<List<StudentResponse>> fetchAllStudents() {
-        log.info("Received request to fetch all students");
-        List<StudentResponse> fetchAllStudents = service.fetchAllStudents();
-        if(fetchAllStudents!=null) {        	
-        	ResponseEntity<List<StudentResponse>> response = new ResponseEntity<>(fetchAllStudents, HttpStatus.OK);
-        	log.info("Returning response for fetching all students: {}", response.getBody());
-        	return response;
-        }
-        log.error("No students found");
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
+    
     @GetMapping("/fetchAllTeachers")
-    public ResponseEntity<List<TeacherResponse>> fetchAllTeachers() {
+    public ResponseEntity<List<UserResponse>> fetchAllTeachers() {
         log.info("Received request to fetch all teachers");
-        List<TeacherResponse> fetchAllTeachers = service.fetchAllTeachers();
+        List<UserResponse> fetchAllTeachers = service.fetchAllTeachers();
         if(fetchAllTeachers!=null) {        	
-        	ResponseEntity<List<TeacherResponse>> response = new ResponseEntity<>(fetchAllTeachers, HttpStatus.OK);
+        	ResponseEntity<List<UserResponse>> response = new ResponseEntity<>(fetchAllTeachers, HttpStatus.OK);
         	log.info("Returning response for fetching all teachers: {}", response.getBody());
         	return response;
         }
@@ -169,10 +172,10 @@ public class AdminController {
     }
 
 	@DeleteMapping("/deleteStudent")
-	public ResponseEntity<StudentResponse> deleteStudent(@RequestParam String id) {
+	public ResponseEntity<UserResponse> deleteStudent(@RequestParam String id) {
 		log.info("Got request to delete student with UserName: {}", id);
-		StudentResponse deletedStudent = service.deleteStudent(id);
-		if (deletedStudent.getStudent()==null) {
+		UserResponse deletedStudent = service.deleteStudent(id);
+		if (deletedStudent.getUser()==null) {
 			log.info("Not able to find student with ID: {}", id);
 			return new ResponseEntity<>(deletedStudent, HttpStatus.NOT_FOUND);
 		}
@@ -181,10 +184,10 @@ public class AdminController {
 	}
 
 	@DeleteMapping("/deleteTeacher")
-	public ResponseEntity<TeacherResponse> deleteTeacher(@RequestParam String id) {
+	public ResponseEntity<UserResponse> deleteTeacher(@RequestParam String id) {
 		log.info("Got request to delete teacher with UserName: {}", id);
-		TeacherResponse deletedStudent = service.deleteTeacher(id);
-		if (deletedStudent.getTeacher()==null) {
+		UserResponse deletedStudent = service.deleteTeacher(id);
+		if (deletedStudent.getUser()==null) {
 			log.info("Not able to find teacher with ID: {}", id);
 			return new ResponseEntity<>(deletedStudent, HttpStatus.NOT_FOUND);
 		}

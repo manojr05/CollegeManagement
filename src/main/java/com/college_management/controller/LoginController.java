@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.college_management.service.LoginService;
-import com.college_management.utils.AdminResponse;
-import com.college_management.utils.StudentResponse;
-import com.college_management.utils.TeacherResponse;
+import com.college_management.utils.UserResponse;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +21,9 @@ public class LoginController {
 	private LoginService service;
 
 	@PostMapping("/login")
-    public ResponseEntity<AdminResponse> loginAdmin(@RequestParam String userName, @RequestParam String password) {
+    public ResponseEntity<UserResponse> loginAdmin(@RequestParam String userName, @RequestParam String password) {
         log.info("Admin login request received for username: {}", userName);
-        AdminResponse loginAdmin = service.loginAdmin(userName, password);
+        UserResponse loginAdmin = service.loginAdmin(userName, password);
         log.info("Admin login response: {}", loginAdmin);
         if (loginAdmin.getMessage().contains("Successfull")) {
             log.info("Admin login successful for username: {}", userName);
@@ -39,9 +37,9 @@ public class LoginController {
     }
 
     @PostMapping("/student/login")
-    public ResponseEntity<StudentResponse> loginStudent(@RequestParam String userName, @RequestParam String password, HttpSession session) {
+    public ResponseEntity<UserResponse> loginStudent(@RequestParam String userName, @RequestParam String password, HttpSession session) {
         log.info("Student login request received for username: {}", userName);
-        StudentResponse loginStudent = service.loginStudent(userName, password, session);
+        UserResponse loginStudent = service.loginStudent(userName, password, session);
         if (loginStudent.getMessage().contains("Successfull")) {
             log.info("Student login successful for username: {}", userName);
             log.info("Student login response: {}", loginStudent);
@@ -55,9 +53,9 @@ public class LoginController {
     }
 
     @PostMapping("/teacher/login")
-    public ResponseEntity<TeacherResponse> loginTeacher(@RequestParam String userName, @RequestParam String password) {
+    public ResponseEntity<UserResponse> loginTeacher(@RequestParam String userName, @RequestParam String password) {
         log.info("Teacher login request received for username: {}", userName);
-        TeacherResponse loginTeacher = this.service.loginTeacher(userName, password);
+        UserResponse loginTeacher = this.service.loginTeacher(userName, password);
         if (loginTeacher.getMessage().contains("Successfull")) {
             log.info("Teacher login successful for username: {}", userName);
             log.info("Teacher login response: {}", loginTeacher);

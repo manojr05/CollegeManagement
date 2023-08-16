@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.college_management.service.StudentService;
-import com.college_management.utils.StudentResponse;
+import com.college_management.utils.UserResponse;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +22,11 @@ public class StudentController {
 	private StudentService service;
 
 	@GetMapping("/getMyDetails")
-	public ResponseEntity<StudentResponse> fetchMyDetails(HttpSession session){
-		StudentResponse myDetails = service.fetchMyDetails(session);
+	public ResponseEntity<UserResponse> fetchMyDetails(HttpSession session){
+		UserResponse myDetails = service.fetchMyDetails(session);
 		log.info("Got request to fetch the student details.");
-		if(myDetails.getStudent()!=null) {
-			log.info("Details fetched response: {}", myDetails.getStudent());
+		if(myDetails.getUser()!=null) {
+			log.info("Details fetched response: {}", myDetails.getUser());
 			return new ResponseEntity<>(myDetails, HttpStatus.OK);
 		}
 		log.error("Failed to fetch. Error message: {}", myDetails.getMessage());
